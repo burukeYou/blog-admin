@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myblog.dao.UserMapper" >
+
+    <insert id="addUser" parameterType="com.myblog.entity.User" useGeneratedKeys="true" keyProperty="id">
+        insert into user values (#{id},#{username},#{nickname},#{email},#{password},#{avatar},#{enabled},#{accountNonExpired},#{accountNonLocked},#{credentialsNonExpired})
+    </insert>
+
+
+    <insert id="addUser_Role" parameterType="com.myblog.entity.User">
+        <foreach collection="roles" item="role">
+            insert into user_role values (
+            null,#{id},#{role.id})
+        </foreach>
+    </insert>
+
+    <select id="findUserByUsername" parameterType="String" resultMap="roleOfUser">
+        SELECT
+        user.id as uId,
+        `user`.*,
+        role.id as rId,
+        role.*
+        FROM user
+        INNER JOIN user_role ON user.id = user_role.user_id
+        INNER JOIN role ON user_role.role_id= role.id
+        WHERE username = #{username}
+    </select>
+    <resultMap id="roleOfUser" type="com.myblog.entity.User">
+        <id property="id" column="uId"/>
+        <result property="username" column="username"/>
+        <result property="nickname" column="nickname"/>
+        <result property="email" column="email"/>
+        <result property="password" column="password"/>
+        <result property="avatar" column="avatar"/>
+        <result property="enabled" column="enabled"/>
+        <result property="accountNonExpired" column="accountNonExpired"/>
+        <result property="accountNonLocked" column="accountNonLocked"/>
+        <result property="credentialsNonExpired" column="credentialsNonExpired"/>
+
+
+        <collection property="roles" ofType="com.myblog.entity.Role">
+            <id property="id" column="rId"/>
+            <result property="roleName" column="roleName"/>
+            <result property="roleTag" column="roleTag"/>
+            <result property="roleDesc" column="roleDesc"/>
+        </collection>
+    </resultMap>
+
+
+    <!-- ===========================================   -->
+  <!--
+    item表示集合中每一个元素进行迭代时的别名，
+    index指定一个名字，用于表示在迭代过程中，每次迭代到的位置，
+    open表示该语句以什么开始，
+    separator表示在每次进行迭代之间以什么符号作为分隔 符，
+    close表示以什么结束。
+
+    在使用foreach的时候最关键的也是最容易出错的就是collection属性，该属性是必须指定的，但是在不同情况 下，该属性的值是不一样的，主要有一下3种情况：
+    1. 如果传入的是单参数且参数类型是一个List的时候，collection属性值为list
+    2. 如果传入的是单参数且参数类型是一个array数组的时候，collection的属性值为array
+    3. 如果使用Map封装了，collection的属性值为对应的Key
+
+
+    -->
+    <select id="findUserListInId" parameterType="java.util.List" resultType="com.myblog.entity.User">
+        <if test="list != null">
+            select * from user where id in
+            <foreach collection="list" index="index" item="e" open="("
+                     separator="," close=")">
+                #{e}
+            </foreach>
+        </if>
+
+
+    </select>
+
+
+
+
+
+</mapper>

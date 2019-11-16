@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8">
+    <title>Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+<!--============================CSS======================================================================-->
+    <!-- favicon -->
+    <link id="favicon" rel="icon" type="image/png" href="https://karizma-preview.netlify.com/images/favicon.ico">
+
+    <!-- Google Fonts-->
+    <link rel="stylesheet" href="../../static/home-css/font.css" th:href="@{/home-css/font.css}">
+
+    <!-- Bootstrap css -->
+    <link rel="stylesheet" href="../../static/home-css/bootstrap.css" th:href="@{/home-css/bootstrap.css}">
+
+    <!-- splitlayout.css -->
+    <link rel="stylesheet" href="../../static/home-css/splitlayout.css" th:href="@{/home-css/splitlayout.css}">
+
+    <link rel="stylesheet" href="../../static/home-css/animations.css" th:href="@{/home-css/animations.css}">
+
+    <!-- responsiveslides.css -->
+    <link rel="stylesheet" href="../../static/home-css/responsiveslides.css" th:href="@{/home-css/responsiveslides.css}">
+
+    <!-- slick css -->
+    <link rel="stylesheet" href="../../static/home-css/slick.css" th:href="@{/home-css/slick.css}">
+    <link rel="stylesheet" href="../../static/home-css/slick-theme.css" th:href="@{/home-css/slick-theme.css}">
+
+    <!-- magnific-popup.css -->
+    <link rel="stylesheet" href="../../static/home-css/magnific-popup.css" th:href="@{/home-css/magnific-popup.css}">
+
+    <!-- font-awesome.min.css -->
+    <link rel="stylesheet" href="../../static/home-css/font-awesome.min.css" th:href="@{/home-css/font-awesome.min.css}">
+
+    <link rel="stylesheet" href="../../static/home-css/pe-icon-7-stroke.min.css" th:href="@{/home-css/pe-icon-7-stroke.min.css}">
+
+    <!-- Main style css -->
+    <link rel="stylesheet" href="../../static/home-css/style.css" th:href="@{/home-css/style.css}">
+
+    <!-- Responsive css -->
+    <link rel="stylesheet" href="../../static/home-css/responsive.css" th:href="@{/home-css/responsive.css}">
+
+
+</head>
+<body>
+<!--============================Body======================================================================-->
+
+
+<input type="hidden" th:value="${blogUser.id}" id="blogUser_id">
+<input type="hidden" th:value="${blogUser.username}" id="blogUsername">
+
+<!--=========================================================================================-->
+<!--Start Preloader-->
+<div class="page-loader startLoad">
+    <div class="loader startLoad"></div>
+</div>
+<!--End Preloader-->
+
+<div id="splitlayout" class="splitlayout reset-layout close-right">
+    <div class="intro">
+
+        <!--Start Home-->
+        <div class="home_type full-height">
+            <div class="side side-left container" style="background-image: url(/home-imgs/home_personal.jpg);">
+                <div class="overlayer">
+                    <div id="particles-js"><canvas class="particles-js-canvas-el" width="499" height="878"></canvas></div>
+                    <div class="display-table">
+                        <div class="display-table-cell">
+                            <h1 class="fit__text">I AM <span id="typed"></span><span class="typed-cursor">|</span></h1>
+                            <div id="typed-strings">
+                                <span th:text="${blogUser.nickname}">JOHN DOE</span>
+                                <span>DEVELOPER</span>
+                                <span>FROM China</span>
+                            </div>
+
+                            <div class="more_info">
+
+                                <!--<div class="item">
+                                    <span class="info-title">Age : </span>
+                                    <span class="info-body">27 Years</span>
+                                </div>
+
+                                <div class="item">
+                                    <span class="info-title">Date of birth : </span>
+                                    <span class="info-body">15-02-1991</span>
+                                </div>-->
+
+                                <div class="item">
+                                    <span class="info-title">Address : </span>
+                                    <span class="info-body">China</span>
+                                </div>
+
+                                <div class="item">
+                                    <span class="info-title">E-mail : </span>
+                                    <span class="info-body" th:text="${blogUser.email}">email@example.com</span>
+                                </div>
+
+                              <!--  <div class="item">
+                                    <span class="info-title">Phone : </span>
+                                    <span class="info-body">+0123 123 456 789</span>
+                                </div>-->
+
+                                <div class="item">
+                                    <span class="info-title">Freelance : </span>
+                                    <span class="info-body">Available</span>
+                                </div>
+
+                                <a href="#">RESUME</a>
+                                <a href="#contact" class="goToSec">HIRE ME</a>
+
+                            </div>
+                            <!--.more_info-->
+                        </div>
+                        <!--.display-table-cell-->
+                    </div>
+                    <!--.display-table-->
+
+                </div>
+                <!--.overlayer-->
+            </div>
+            <!--.side-->
+        </div>
+        <!--.home_type-->
+        <!--End Home-->
+
+        <!--Start Menu-->
+        <div class="mob-menu-overlay"></div>
+        <div class="mob-menu">
+            <div class="mob-menu-content">
+                <div class="float-left">
+                    <p class="menu-title" th:text="${blogUser.nickname}">Jone Doe</p>
+                </div>
+                <div class="float-right">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="side side-right">
+            <div class="intro-content">
+                <div class="profile">
+                    <img src="images/profile.jpg" th:src="${blogUser.avatar}" alt="profile">
+                </div>
+                <h1>
+                    <span th:text="${blogUser.nickname}">John Doe</span>
+                </h1>
+                <div class="menu">
+
+                    <div>
+                        <span style="display: contents;color: black">文章数：<span th:text="${blogCount}"></span></span> &nbsp;
+                        <span style="display: contents;color: black">访问量：<span th:text="${accessCount}"></span></span> &nbsp;<br>
+                        <span style="display: contents;color: black">喜欢：<span th:text="${likeCount}"></span></span> &nbsp;
+                        <span style="display: contents;color: black">评论数：<span th:text="${commentCount}"></span></span> &nbsp;
+                    </div>
+
+
+                    <!--Social links-->
+                   <!-- <div class="social-icons">
+                        <a href="#">
+                            <i class="fa fa-facebook"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                        <a href="#">
+                            <i class="fa fa-vimeo"></i>
+                        </a>
+                    </div>-->
+
+                    <!--Menu Items-->
+                    <ul class="list-unstyled menu_list" id="menu">
+                        <li>
+                            <a href="#home" class="active_item">home</a>
+                        </li>
+                        <li>
+                           <!-- <a href="#about" class="">关于我</a>-->
+                        </li>
+                        <li>
+                           <!-- <a href="#resume" class="">归档</a>-->
+                        </li>
+                        <li>
+                           <!-- <a href="#services" class="">services</a>-->
+                        </li>
+                        <li>
+                          <!--  <a href="#portfolio" class="">portfolio</a>-->
+                        </li>
+                        <li>
+                            <!--<a href="#blog" class="" onclick="">my blog</a>-->
+                            <a href="#blog"  class="" id="toMyBlog" onclick="loadMyBlog()">my blog</a>
+                        </li>
+                        <li>
+                            <a href="#contact" class="">CONTACT ME</a>
+                        </li>
+                    </ul>
+
+                </div>
+                <!--.menu-->
+            </div>
+            <!--.intro-content-->
+        </div>
+        <!--.side-->
+        <!--End Menu-->
+
+    </div>
+
+    <!-- /intro -->
+    <div class="page page-right full-height page-right-normal-height">
+        <div id="pt-main" class="pt-perspective page-inner">
+
+            <!--1-关于-->
+            <div th:replace="~{users/fragment-user/aboutme :: aboutMe}"></div>
+
+            <!--2-Start Resume Section
+            <div th:replace="~{users/fragment-user/resume :: resume}"></div>
+            End Resume Section-->
+
+            <!--3-Start Services Section
+            <div th:replace="~{users/fragment-user/services :: services}"></div>
+           End Services Section-->
+
+            <!--
+                  5-Portfolio部分
+            <div th:replace="~{users/fragment-user/portfolio :: portfolio}"></div>
+            End Portfolio Section-->
+
+            <!--6-博客-->
+            <div th:replace="~{users/fragment-user/myblog :: myMlog}"></div>
+            <!--End Blog Section-->
+
+            <!--7-联系我-->
+            <div th:replace="~{users/fragment-user/contact :: contact}"></div>
+            <!--End Contact Section-->
+
+        </div>
+        <!--.page-inner-->
+    </div>
+    <!--.page-right-->
+</div>
+
+
+<!--============================JS======================================================================-->
+
+
+<!--jquery.min.js-->
+<script src="../../static/home-js/jquery.min.js" th:src="@{/home-js/jquery.min.js}"></script>
+
+<!--jquery.min.js-->
+<script src="../../static/home-js/jquery-migrate-1.2.1.min.js" th:src="@{/home-js/jquery-migrate-1.2.1.min.js}"></script>
+
+    <!--jquery.matchHeight-min.js-->
+    <script src="../../static/home-js/jquery.matchHeight-min.js" th:src="@{/home-js/jquery.matchHeight-min.js}"></script>
+
+    <!--jquery.alterclass.js-->
+    <script src="../../static/home-js/jquery.alterclass.js" th:src="@{/home-js/jquery.alterclass.js}"></script>
+
+    <!--bootstrap.min.js-->
+    <script src="../../static/home-js/bootstrap.min.js" th:src="@{/home-js/bootstrap.min.js}"></script>
+
+    <!--particles.min.js-->
+    <script src="../../static/home-js/particles.min.js" th:src="@{/home-js/particles.min.js}"></script>
+
+    <!--app.js-->
+    <script src="../../static/home-js/app.js" th:src="@{/home-js/app.js}"></script>
+
+    <!--modernizr.custom.js-->
+    <script src="../../static/home-js/modernizr.custom.js" th:src="@{/home-js/modernizr.custom.js}"></script>
+
+    <!--typed.min.js-->
+    <script src="../../static/home-js/typed.min.js" th:src="@{/home-js/typed.min.js}"></script>
+
+    <!--responsiveslides.min.js-->
+    <script src="../../static/home-js/responsiveslides.min.js" th:src="@{/home-js/responsiveslides.min.js}"></script>
+
+    <!--jquery.fittext.js-->
+    <script src="../../static/home-js/jquery.fittext.js" th:src="@{/home-js/jquery.fittext.js}"></script>
+
+    <!--isotope.pkgd.min.js-->
+    <script src="../../static/home-js/isotope.pkgd.min.js" th:src="@{/home-js/isotope.pkgd.min.js}"></script>
+
+    <!--jquery.magnific-popup.min.js-->
+    <script src="../../static/home-js/jquery.magnific-popup.min.js" th:src="@{/home-js/jquery.magnific-popup.min.js}"></script>
+
+    <!-- Main script js -->
+    <script src="../../static/home-js/custom.js" th:src="@{/home-js/custom.js}"></script>
+
+
+
+    <!--  MyBlog的js  -->
+    <script src="../../static/home-js/custom.js" th:src="@{/js/blog/home.js}"></script>
+
+
+
+
+    <script>
+        $(function () {
+            //$("#toMyBlog").trigger("click");
+        });
+
+    </script>
+</body>
+</html>

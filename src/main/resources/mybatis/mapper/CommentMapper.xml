@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myblog.dao.CommentMapper">
+
+    <select id="findAllNewCommentByBlog_id" resultMap="NewCommentOfuser">
+        select * from comment
+        INNER JOIN user on `comment`.user_id = `user`.id
+        where blog_id = #{blog_id} ORDER BY createTime DESC limit #{startRow},#{pageSize}
+    </select>
+    <resultMap id="NewCommentOfuser" type="com.myblog.entity.Comment">
+        <id property="id" column="id"/>
+        <result property="user_id" column="user_id"/>
+        <result property="blog_id" column="blog_id"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="createTime"/>
+        <result property="praise_count" column="praise_count"/>
+
+        <association property="user" javaType="com.myblog.entity.User">
+            <id property="id" column="user_id"/>
+            <result property="username" column="username"/>
+            <result property="nickname" column="nickname"/>
+            <result property="email" column="email"/>
+            <result property="password" column="password"/>
+            <result property="avatar" column="avatar"/>
+            <result property="enabled" column="enabled"/>
+            <result property="accountNonExpired" column="accountNonExpired"/>
+            <result property="accountNonLocked" column="accountNonLocked"/>
+            <result property="credentialsNonExpired" column="credentialsNonExpired"/>
+        </association>
+    </resultMap>
+
+
+    <select id="findAllHotCommentByBlog_id" resultMap="HotCommentOfuser">
+        select * from comment
+        INNER JOIN user on `comment`.user_id = `user`.id
+        where blog_id = #{blog_id} ORDER BY comment.praise_count DESC limit #{startRow},#{pageSize}
+    </select>
+    <resultMap id="HotCommentOfuser" type="com.myblog.entity.Comment">
+        <id property="id" column="id"/>
+        <result property="user_id" column="user_id"/>
+        <result property="blog_id" column="blog_id"/>
+        <result property="content" column="content"/>
+        <result property="createTime" column="createTime"/>
+        <result property="praise_count" column="praise_count"/>
+
+        <association property="user" javaType="com.myblog.entity.User">
+            <id property="id" column="user_id"/>
+            <result property="username" column="username"/>
+            <result property="nickname" column="nickname"/>
+            <result property="email" column="email"/>
+            <result property="password" column="password"/>
+            <result property="avatar" column="avatar"/>
+            <result property="enabled" column="enabled"/>
+            <result property="accountNonExpired" column="accountNonExpired"/>
+            <result property="accountNonLocked" column="accountNonLocked"/>
+            <result property="credentialsNonExpired" column="credentialsNonExpired"/>
+        </association>
+    </resultMap>
+
+
+
+
+
+
+
+</mapper>

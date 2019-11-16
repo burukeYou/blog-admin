@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myblog.dao.BlogMapper">
+
+    <select id="getBlogById" parameterType="Long" resultMap="findBlogWithUserAndCategory">
+        SELECT *
+        FROM blog INNER JOIN `user` ON blog.user_id = `user`.id
+        <!--<if test="blog.category_id != null">
+            INNER JOIN category ON blog.category_id = category.id
+        </if>-->
+        where blog.id = #{id}
+    </select>
+    <resultMap id="findBlogWithUserAndCategory" type="com.myblog.entity.Blog">
+         <id property="id" column="id"/>
+         <result property="user_id" column="user_id"/>
+         <result property="category_id" column="category_id"/>
+         <result property="title" column="title"/>
+         <result property="summary" column="summary"/>
+         <result property="content" column="content"/>
+         <result property="htmlContent" column="htmlContent"/>
+         <result property="createTime" column="createTime"/>
+         <result property="readSize" column="readSize"/>
+         <result property="commentSize" column="commentSize"/>
+         <result property="praise_count" column="praise_count"/>
+         <result property="tags" column="tags"/>
+         <result property="status" column="status"/>
+         <result property="blog_img" column="blog_img"/>
+
+        <association property="user" javaType="com.myblog.entity.User">
+            <id property="id" column="user_id"/>
+            <result property="username" column="username"/>
+            <result property="nickname" column="nickname"/>
+            <result property="email" column="email"/>
+            <result property="password" column="password"/>
+            <result property="avatar" column="avatar"/>
+            <result property="enabled" column="enabled"/>
+            <result property="accountNonExpired" column="accountNonExpired"/>
+            <result property="accountNonLocked" column="accountNonLocked"/>
+            <result property="credentialsNonExpired" column="credentialsNonExpired"/>
+        </association>
+
+
+       <!-- <association property="category" javaType="com.myblog.entity.Category">
+            <id property="id" column="category_id"/>
+            <result property="categoryName" column="categoryName"/>
+            <result property="user_id" column="user_id"/>
+        </association>-->
+    </resultMap>
+
+    <!-- ================================搜索博客=============================================-->
+
+    <select id="findBlogCountByCondition" parameterType="com.myblog.vo.QueryConditionVo" resultType="Integer">
+        select count(*) from blog where
+        <if test="keyword != null">
+            (
+                title LIKE CONCAT('%',#{keyword},'%')
+                OR summary LIKE CONCAT('%',#{keyword},'%')
+                OR tags LIKE CONCAT('%',#{keyword},'%')
+                OR content LIKE CONCAT('%',#{keyword},'%')
+            )
+               AND
+        </if>
+         user_id = #{user_id}
+        <if test="categoryId != null and categoryId != ''" >
+            and category_id = #{categoryId}
+        </if>
+    </select>
+
+
+    <select id="findBlogByCondition" parameterType="com.myblog.vo.QueryConditionVo" resultType="com.myblog.entity.Blog">
+        select * from blog where
+        <if test="keyword != null">
+         (
+            title LIKE CONCAT('%',#{keyword},'%')
+            OR summary LIKE CONCAT('%',#{keyword},'%')
+            OR tags LIKE CONCAT('%',#{keyword},'%')
+            OR content LIKE CONCAT('%',#{keyword},'%')
+          )
+            AND
+        </if>
+         user_id = #{user_id}
+        <if test="categoryId != null and categoryId != ''" >
+            and category_id = #{categoryId}
+        </if>
+        <if test="order == 'new'">
+            order by createTime DESC limit #{currentPage},#{pageSize}
+        </if>
+        <if test="order == 'hot'">
+            order by readSize+praise_count+commentSize DESC limit #{currentPage},#{pageSize}
+        </if>
+    </select>
+
+
+
+
+
+
+
+</mapper>

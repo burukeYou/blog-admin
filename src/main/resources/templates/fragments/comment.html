@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" >
+<head>
+    <meta charset="utf-8">
+    <title>Home</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet" href="../../static/css/blog/style.css" th:href="@{/css/blog/style.css}">
+    <link rel="stylesheet" href="../../static/css/blog/comment.css" th:href="@{/css/blog/comment.css}">
+
+</head>
+<body>
+    <div th:fragment="comment">
+        <!--评论区域 begin-->
+        <h3>评论：(<span id="totalDataCount"></span>条)</h3>
+
+        <div class="commentAll" >
+            <div class="reviewArea clearfix">
+                <textarea class="content comment-input" id="commentId"  placeholder="Please enter a comment&hellip;" onkeyup="keyUP(this)"></textarea>
+                <a href="javascript:;" style="display: block" class="plBtn">评论</a>
+
+            </div>
+
+
+            <ul class="nav nav-pills">
+                <li role="presentation" id="newId" class="active" onclick="findNewComment()"><a href="javascript:;">最新</a></li>
+                <li role="presentation" onclick="findHotComment()"><a href="javascript:;">最热</a></li>
+            </ul>
+
+            <!--评论区域 end-->
+            <!--回复区域 begin-->
+
+
+            <!--隐藏域-->
+            <input type="hidden" id="currentPage" value="1">
+
+            <div class="comment-show" id="showComment" style="padding: 20px;">
+
+
+                <!-- <div class="comment-show-con clearfix">
+                   <div class="comment-show-con-img pull-left"><img src="../../../static/img/header.png" alt=""></div>
+
+                 <div class="comment-show-con-list pull-left clearfix">
+                       <div class="pl-text clearfix">
+                           <a href="#" class="comment-size-name">张三 : </a>
+                           <span class="my-pl-con">&nbsp;来啊 造作啊!</span>
+                       </div>
+                       <div class="date-dz">
+                           <span class="date-dz-left pull-left comment-time">2017-5-2 11:11:39</span>
+                           <div class="date-dz-right pull-right comment-pl-block">
+                               <a href="javascript:;" class="removeBlock">删除</a>
+                               <a href="javascript:;" class="date-dz-pl pl-hf hf-con-block pull-left">回复</a>
+                               <span class="pull-left date-dz-line">|</span>
+                               <a href="javascript:;" class="date-dz-z pull-left"><i class="date-dz-z-click-red"></i>赞 (<i class="z-num">666</i>)</a>
+                           </div>
+                       </div>
+                       <div class="hf-list-con"></div>
+
+                   </div>-->
+                </div>
+
+                <!-- 分页 -->
+                 <div>
+                     <nav aria-label="..." id="commentPage">
+                        <!-- <ul class="pager">
+                             <li>总：10页</li>
+                             <li><a href="#">Previous</a></li>
+                             <li>第6页</li>
+                             <li><a href="#">Next</a></li>
+                         </ul>-->
+                     </nav>
+                 </div>
+            </div>
+
+            <!--回复区域 end-->
+        </div>
+
+
+
+    </div>
+
+
+
+
+
+
+    <script type="text/javascript" src="../../static/js/jquery-1.12.0.min.js" th:src="@{/js/jquery-1.12.0.min.js}"></script>
+    <script type="text/javascript" src="../../static/js/jquery.flexText.js" th:src="@{/js/jquery.flexText.js}"></script>
+    <script type="text/javascript" src="../../static/js/blog/comment.js" th:src="@{/js/blog/comment.js}"></script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

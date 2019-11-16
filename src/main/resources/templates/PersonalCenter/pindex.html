@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8">
+    <title>Single Post</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <style>
+        .mesBtn{
+            background-color: #c2c2c2;
+           /* #bebdb6*/
+        }
+
+    </style>
+    
+</head>
+<body>
+
+
+            <div class="list-group" th:fragment="leftBar">
+                <a th:href="@{/personal/index}" class="list-group-item">个人资料</a>
+                <a  th:href="@{/personal/bloglist}" class="list-group-item">文章管理</a>
+              <!--  <a  th:href="@{/personal/praiselist}" class="list-group-item">我的点赞</a>-->
+                <a th:href="@{/personal/category}"  class="list-group-item">个人分类</a>
+                <a  th:href="@{/personal/historyBlog}" class="list-group-item">浏览记录</a>
+            </div>
+
+
+
+
+        <script th:src="@{/js/jquery.min.js}" charset="utf-8"></script>
+        <script th:fragment="leftBar_JS">
+            $(function () {
+                var url = window.location.href;
+                var res =url.substring(url.lastIndexOf("/")+1,url.length);
+
+                if (res == "index"){
+                    $(".list-group a:eq(0)").addClass("active");
+                }else if(res == "bloglist"){
+                    $(".list-group a:eq(1)").addClass("active");
+                }/*else if(res =="praiselist"){
+                    $(".list-group a:eq(2)").addClass("active");
+                }*/
+                else if(res =="category"){
+                    $(".list-group a:eq(2)").addClass("active");
+                }
+                else if(res =="historyBlog"){
+                    $(".list-group a:eq(3)").addClass("active");
+                }
+
+            })
+
+        </script>
+</body>
+</html>

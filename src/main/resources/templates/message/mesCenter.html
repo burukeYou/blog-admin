@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8">
+    <title>Single Post</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+
+    <!-- Font-Awesome -->
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css" th:href="@{/css/font-awesome/css/font-awesome.min.css}">
+
+    <!-- Google Webfonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|PT+Serif:400,400italic' rel='stylesheet' type='text/css'>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css" th:href="@{/css/style.css}"  id="theme-styles">
+
+    <!-- <[if lt IE 9]>    -->
+    <script src="js/vendor/google/html5-3.6-respond-1.1.0.min.js" th:src="@{/js/vendor/google/html5-3.6-respond-1.1.0.min.js}"></script>
+
+    <link rel="stylesheet" href="css/jquery-labelauty.css" th:href="@{/MessagePopup/spop.css}"/>
+
+    <style>
+        .mesBtn{
+            background-color: #c2c2c2;
+            /* #bebdb6*/
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+
+
+            <input type="hidden" th:value="${#authentication.principal.nickname}" id="nickname">
+
+            <div>
+                <div style="padding-top: 10px">
+                    <h3 style="display: inline;">未读消息：<span></span></h3>
+                    <span style="float: right"> <a href="javascript:;" th:onclick="readAllMessageByType([[${type}]])">全部标记为已读</a> |
+                        <a href="javascript:;" th:onclick="deleteAllMsgByType([[${type}]])">清空所有消息</a> </span>
+                </div>
+
+                <div style="padding-left: 10px;padding-right: 10px;">
+                    <div class="row" style="border-bottom: 1px solid #bebdb6" th:each="notice :${pageBean.dataList}">
+                        <div class="panel-body">
+                            <a href="#" th:text="${notice.notifier}"></a> &nbsp; &nbsp;
+                             <span th:if="${notice.type == 1 }">评论了你的博客</span>
+                             <span th:if="${notice.type == 2 }">回复了你的评论</span>
+                             <span th:if="${notice.type == 3 }">点赞了你的</span>
+
+                            <!--删除-->
+                            <span style="float: right" class="glyphicon glyphicon-trash"
+                                  aria-hidden="true" th:onclick="deleteMsgByTypeSingle([[${type}]],[[${notice.id}]])"></span>
+
+                            <br>
+                            <a th:onclick="readMessage([[${notice.id}]],[[${notice.receiver}]])" th:href="'/'+${notice.receiver}+'/blogs/'+${notice.typeId}" target="_Blank" style="color: black">
+                                <h4><span th:utext="${notice.typeName}"></span>&nbsp;&nbsp;
+                                    <span th:if="${notice.status == 0}" class="label label-danger">未读</span>
+                                    <span th:if="${notice.status == 1}" class="label label-success">已读</span>
+                                </h4>
+                            </a>
+
+                            <span style="float: right"  th:text="${#dates.format(notice.createtime,'yyyy-MM-dd HH:mm')}">2019-05-04</span>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <nav aria-label="...">
+                    <ul class="pager" >
+                        共<span th:text="${pageBean.totalDataCount}">20</span>条 &nbsp;&nbsp;
+                        <!--上一页-->
+                        <li th:if="${pageBean.currentPage > 1}">
+                            <a href="#"  th:href="@{'/msg/'+${type}+'?currentPage='+${pageBean.currentPage-1}}"><span aria-hidden="true">
+                                &larr;</span>
+                            </a>
+                        </li>
+                        <li th:if="${pageBean.currentPage <= 1}" class="disabled">
+                           <span aria-hidden="true">&larr;</span>
+                        </li>
+
+                        &nbsp;&nbsp;
+                        <span class="label label-danger" style="font-size: 98%;" th:text="${pageBean.currentPage}">1</span>&nbsp;&nbsp;
+
+                        <!-- 下一页 -->
+                        <li th:if="${pageBean.currentPage < pageBean.totalPageCount}">
+                            <a href="#" th:href="@{'/msg/'+${type}+'?currentPage='+${pageBean.currentPage+1}}"><span aria-hidden="true">&rarr;</span></a>
+                        </li>
+                        <li th:if="${pageBean.currentPage >= pageBean.totalPageCount}" class="disabled">
+                                <span aria-hidden="true">&rarr;</span>
+                        </li>
+
+
+                    </ul>
+                </nav>
+            </div>
+
+
+            <!--=================================================================================================-->
+            <script th:src="@{/js/jquery.min.js}"></script>
+            <script th:src="@{/js/bootstrap.min.js}"></script>
+            <script th:src="@{/js/modernizr.js}"></script>
+
+            <script type="text/javascript" th:src="@{/MessagePopup/spop.js}"></script>
+
+
+            <script type="text/javascript">
+                $(function() {
+                    setFrmHeight();
+                });
+
+
+
+                //处理iframe高度自适应问题
+                function setFrmHeight() {
+                    var frm = $(window.parent.document).find("#mainFrame");
+                    var height = $(document).height();
+                    frm.height(height);
+                }
+
+                //单个删除
+                function deleteMsgByTypeSingle(type,id) {
+                    if (confirm("你确认要删除吗？")) {
+                        $.ajax({
+                            url:"/msg/delete/"+type+"?nickname="+$("#nickname").val()+"&&id="+id,
+                            async:true,      //是否异步还是同步
+                            type:"Delete",       //请求方式
+                            /* contentType:"application/json;charset=utf-8",
+                             data:JSON.stringify({"nickname":$("#nickname").val(),"id":id}),*/
+                            success:function(data){       //
+                                if (data.code == 200){
+                                    spop({
+                                        style: 'success',
+                                        template: '删除成功',
+                                        autoclose: 1000,
+                                        position: 'top-center',
+
+                                        onClose: function() {
+                                            window.location.reload();
+                                        }
+                                    });
+                                }else if (data.code == 400){
+                                    spop({
+                                        style: 'error',
+                                        template: '删除失败',
+                                        autoclose: 1000,
+
+                                        onClose: function() {
+                                            window.location.reload();
+                                        }
+                                    });
+                                }
+                            },
+                            error:function(){
+                                alert("请求失败");
+                            },
+                            dataType:"json"
+                        });
+                    }
+                }
+
+
+                //批量删除
+                function deleteAllMsgByType(type) {
+
+                    if (confirm("你确认要删除吗？")) {
+
+                        $.ajax({
+                            url:"/msg/delete/"+type+"?nickname="+$("#nickname").val(),
+                            async:true,      //是否异步还是同步
+                            type:"DELETE",       //请求方式
+                            success:function(data){       //
+                                if (data.code == 200){
+                                    spop({
+                                        style: 'success',
+                                        template: '删除成功',
+                                        autoclose: 1000,
+                                        position: 'top-center',
+
+                                        onClose: function() {
+                                            parent.location.reload();
+                                        }
+                                    });
+                                }else if (data.code == 400){
+                                    spop({
+                                        style: 'error',
+                                        template: '删除失败',
+                                        autoclose: 1000,
+
+                                        onClose: function() {
+                                            parent.location.reload();
+                                        }
+                                    });
+                                }
+
+                            },
+                            error:function(){
+                                alert("请求失败");
+                            },
+                            dataType:"json"
+                        });
+                    }
+                }
+
+                //标记为已读
+                function readMessage(id,receiver) {
+                    $.ajax({
+                        url:"/msg/read/"+id,
+                        async:true,      //是否异步还是同步
+                        type:"POST",       //请求方式
+                        data:{"receiver":receiver},
+                        success:function(data){       //
+                            alert(data.message);
+                            window.location.reload();
+                        },
+                        error:function(){
+                            alert("请求失败");
+                        },
+                        dataType:"json"
+                    });
+                }
+
+                //全部标记为已读
+                function readAllMessageByType(type) {
+                    $.ajax({
+                        url:"/msg/read",
+                        async:true,      //是否异步还是同步
+                        type:"POST",       //请求方式
+                        data:{"type":type},
+                        success:function(data){       //
+                            if (data.code == 200){
+                                spop({
+                                    style: 'success',
+                                    template: '操作成功',
+                                    autoclose: 1000,
+                                    position: 'top-center',
+
+                                    onClose: function() {
+                                        parent.location.reload();
+                                    }
+                                });
+                            }else if (data.code == 400){
+                                spop({
+                                    style: 'error',
+                                    template: '操作失败',
+                                    autoclose: 1000,
+
+                                    onClose: function() {
+                                        parent.location.reload();
+                                    }
+                                });
+                            }
+                        },
+                        error:function(){
+                            alert("请求失败");
+                        },
+                        dataType:"json"
+                    });
+
+                }
+
+
+            </script>
+</body>
+</html>

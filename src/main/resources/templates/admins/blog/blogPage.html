@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet"  href="../../../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+    <!-- Font-Awesome CSS -->
+    <link href="../../../static/css/font-awesome/css/font-awesome.min.css" th:href="@{/css/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
+
+    <!-- Custom styles -->
+    <link href="../../../static/css/style.css" th:href="@{/css/style.css}" rel="stylesheet">
+    <link href="../../../static/css/blog/blog.css" th:href="@{/css/blog/blog.css}" rel="stylesheet">
+
+
+    <link rel="stylesheet" href="../../static/css/blog/style.css" th:href="@{/css/blog/style.css}">
+    <link rel="stylesheet" href="../../static/css/blog/comment.css" th:href="@{/css/blog/comment.css}">
+
+    <link rel="stylesheet" href="editormd/css/editormd.preview.css" th:href="@{/css/editormd.preview.css}"/>
+
+    <link rel="stylesheet" type="text/css" href="css/style.css" th:href="@{/css/praise.css}"/>
+
+    <link rel="stylesheet" type="text/css"  th:href="@{/tocbot/tocbot.css}"/>
+
+    <link rel="stylesheet" type="text/css"  th:href="@{/css/editormd.min.css}"/>
+    <link rel="stylesheet" type="text/css"  th:href="@{/css/editormd.preview.css}"/>
+
+    <link rel="stylesheet"  th:href="@{/MessagePopup/spop.css}"/>
+
+
+
+    <!-- 渲染文章目录 -->
+    <style>
+        body {padding: 40px;}
+
+        #layout > header, .btns {
+            width: auto;
+        }
+
+
+        #custom-toc-container {
+            padding-left: 0;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<input type="hidden" id="blog_id" th:value="${blog.id}">
+<input type="hidden" id="username" th:value="${blog.user.username}">
+<input type="hidden" id="currentUser" th:value="${#authentication.principal}">
+<input type="hidden" id="currentUserName" th:if="${#authentication.principal != 'anonymousUser'}" th:value="${#authentication.principal.username}">
+<input type="hidden" id="currentNickname" th:if="${#authentication.principal != 'anonymousUser'}" th:value="${#authentication.principal.nickname}">
+
+<!-- Page Content -->
+<div class="container blog-content-container">
+
+    <div class="row">
+        <!-- Blog Entries Column -->
+        <div class="col-md-9">
+
+            <!-- Blog Post -->
+            <div class="card mb-4">
+                <div class="card-block">
+                    <!-- 标题卡   -->
+                    <h2 class="card-title">
+							<span>
+			                  <a th:href="'/home/'+${blog.user.username}"  target="_blank">
+			                    <img th:src="${blog.user.avatar}" class="blog-avatar-50" >
+			                  </a>
+					        </span>
+                        <a href="#" th:text="${blog.title}" class="card-link" >
+                        </a>
+                    </h2>
+                    <div class="card-text">
+                        <a th:href="'/home/'+${blog.user.username}" class="card-link" target="_blank" th:text="${blog.user.nickname}"></a>
+                      发表于  <span th:text="${#dates.format(blog.createTime,'yyyy-MM-dd HH:mm:ss')}"></span>
+                        <i class="fa fa-eye" aria-hidden="true" th:text="${blog.readSize}"></i>
+                        <i class="fa fa-comment-o" th:text="${blog.commentSize}" aria-hidden="true"></i>
+
+                        <!--点赞 -->
+                        <i class="fa fa-heart-o" th:text="${blog.praise_count}"
+                           style="cursor: pointer"  aria-hidden="true"></i>
+
+                      <!--  <input th:if="${isPraise}" type="hidden" th:value="${praiseId}">-->
+
+                        &nbsp;&nbsp;&nbsp;&nbsp;
+                      <!--  <a href="javascript:;" onClick="javascript :history.back(-1);">返回</a>&nbsp;&nbsp;&nbsp;&nbsp;-->
+                        <a th:href="@{/index}">主页</a>
+                        <div th:if="${isBlogOwner}">
+                            <a href="javascript:;" style="float: right" id="deleteBlog">删除</a>
+                            <a th:href="'/'+${blog.user.username}+'/blogs/edit/'+${blog.id}" style="float: right;margin-right: 10px">编辑</a>
+                        </div>
+                    </div>
+                    <hr>
+
+                    <!--  正文 -->
+                    <div id="test-markdown-view">
+                        <textarea  style="display:none;" id="append-test"
+                                   th:text="${blog.content}"></textarea>
+                    </div>
+                    <hr>
+
+                </div>
+
+                <!--点赞-->
+                <div class="feed" id="feed2" style="margin-left: 45%;height: 60px;">
+                    <div class="heart" id="like2" rel="like"></div>
+                    <div class="likeCount" id="likeCount2" style="display: inline-block;">10</div>
+                </div>
+                <input type="hidden" id="praiseId">
+
+
+
+                <div class="card-block">
+                    <h3>分类：<a href="#" th:if="${blog.category != null}" th:text="${blog.category.categoryName}"></a></h3>
+                    <h3>标签：
+
+                        <a th:each="tag : ${#strings.arraySplit(blog.tags , ',')}">
+                            <span class="label label-success" th:text="${tag}"></span>
+                        </a>
+                    </h3>
+                </div>
+
+
+                <!--  评论  ---------------------------------------------------------------------------------------- -->
+                <div class="card-block">
+                    <div style="position: relative" th:insert="~{fragments/comment :: comment}"></div>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <!-- 右侧栏目 -->
+        <div class="col-md-3" style="position: fixed;right: 5%;">
+                <!-- 文章目录 -->
+                <div class="card">
+                    <h3 class="card-header"><i class="fa fa-bars" aria-hidden="true"></i> 文章目录</h3>
+
+                    <div class="markdown-body editormd-preview-container" id="custom-toc-container">
+                        #custom-toc-container
+                    </div>
+
+                </div>
+        </div>
+    </div>
+    <!-- /.row -->
+
+
+        
+
+</div>
+<!-- /.container -->
+
+<!-- 返回顶部 -->
+<a id="goToTop" href="#">
+    <i class="fa fa-chevron-up fa-3x" aria-hidden="true"></i>
+</a>
+<div class="container">
+    <p class="m-0 text-center text-white">© 2017 <a href="#">xxx.com</a></p>
+</div>
+
+
+<!-- JavaScript -->
+<script src="../../../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+<script src="../../../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+<script src="../../../static/js/blog/blog.js" th:src="@{/js/blog/blog.js}"></script>
+
+<!---->
+<!--
+<script type="text/javascript" src="../../static/js/jquery-1.12.0.min.js" th:src="@{/js/jquery-1.12.0.min.js}"></script>
+-->
+<script type="text/javascript"  th:src="@{/js/jquery.flexText.js}"></script>
+<script type="text/javascript"  th:src="@{/js/blog/comment.js}"></script>
+
+
+<script  th:src="@{/js/editormd.js}"></script>
+<script th:src="@{/js/lib/marked.min.js}"></script>
+<script  th:src="@{/js/lib/prettify.min.js}"></script>
+
+
+<script  th:src="@{/js/lib/raphael.min.js}"></script>
+<script  th:src="@{/js/lib/underscore.min.js}"></script>
+<script  th:src="@{/js/lib/sequence-diagram.min.js}"></script>
+<script  th:src="@{/js/lib/flowchart.min.js}"></script>
+<script  th:src="@{/js/lib/jquery.flowchart.min.js}"></script>
+
+<script type="text/javascript" th:src="@{/MessagePopup/spop.js}"></script>
+
+
+
+<script type="text/javascript">
+
+    $(function() {
+        var testEditormdView;
+
+
+        //生成目录
+        testEditormdView = editormd.markdownToHTML("test-editormd-view", {
+            markdown        : $("#append-test").text() ,//要生成目录的文本
+            //htmlDecode      : true,       // 开启 HTML 标签解析，为了安全性，默认不开启
+            htmlDecode      : "style,script,iframe",  // you can filter tags decode
+            //toc             : true,      //是否开启目录
+            tocm            : true,    // Using [TOCM]
+            tocContainer    : "#custom-toc-container", // 自定义 ToC 容器层
+            //gfm             : false,
+            //tocDropdown     : true,
+             //markdownSourceCode : true, // 是否保留 Markdown 源码，即是否删除保存源码的 Textarea 标签
+            emoji           : true,
+            taskList        : true,
+            tex             : true,  // 默认不解析
+            flowChart       : true,  // 默认不解析
+            sequenceDiagram : true,  // 默认不解析
+        });
+
+        //显示mardown
+         testEditormdView = editormd.markdownToHTML("test-markdown-view", {
+
+        });
+
+
+
+
+    });
+
+
+
+
+
+
+
+
+
+
+</script>
+
+
+
+</body>
+</html>

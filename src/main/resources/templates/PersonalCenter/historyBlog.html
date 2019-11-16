@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8">
+    <title>Single Post</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+
+    <!-- Font-Awesome -->
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css" th:href="@{/css/font-awesome/css/font-awesome.min.css}">
+
+    <!-- Google Webfonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|PT+Serif:400,400italic' rel='stylesheet' type='text/css'>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css" th:href="@{/css/style.css}"  id="theme-styles">
+
+    <!-- <[if lt IE 9]>    -->
+    <script src="js/vendor/google/html5-3.6-respond-1.1.0.min.js" th:src="@{/js/vendor/google/html5-3.6-respond-1.1.0.min.js}"></script>
+
+    <link rel="stylesheet" href="css/style.css" th:href="@{/js/uoload/amazeui.min.css}" >
+    <link rel="stylesheet" href="css/style.css" th:href="@{/js/uoload/amazeui.cropper.css}" >
+    <link rel="stylesheet" href="css/style.css" th:href="@{/js/uoload/custom_up_img.css}" >
+
+    <link rel="stylesheet" href="css/style.css" th:href="@{/css/bootstrap-select.css}" >
+
+    <style>
+        #bloglist span {
+            margin-right: 1.5rem;
+            color: #999;
+            font-size: 15px
+        }
+
+        #bloglist span span{
+          margin-left: 6px;
+        }
+    </style>
+
+
+</head>
+<body>
+
+
+
+        <input type="hidden" id="userId" name="user_id" th:value="${#authentication.principal.id}">
+        <input type="hidden" id="username"  th:value="${#authentication.principal.username}">
+
+
+        <input type="hidden" id="currentCateId"  th:value="${param.categoryId}">
+
+        <!--top-->
+        <div th:insert="~{fragments/fragments :: topbar}"></div>
+        <hr style="height:1px;border: none;border-top:1px solid #ddd;margin:0px 0;"/>
+
+        <!-- message-list -->
+        <div class="row mes_outter" style="  padding-top: 17px; padding-left: 100px;padding-right: 116px;background-color: #f5f6f7;">
+            <div class="col-md-2 col-sm-2" style="padding-right: 0;">
+                <div th:insert="~{PersonalCenter/pindex.html :: leftBar}"></div>
+
+            </div>
+
+            
+            <!--中心显示区域 -->
+            <div class="col-md-10 col-sm-10 panel panel-default" style="padding: 20px;">
+
+                <!--博客列表 -->
+                <div style="padding-left: 10px;padding-right: 10px;">
+                    <div class="row" style="border-bottom: 1px solid #bebdb6" th:each="blog : ${blogList}">
+                        <div class="panel-body" id="bloglist">
+                            <a target="_Blank" th:href="'/'+${#authentication.principal.username}+'/blogs/'+${blog.id}" style="color: black">
+                                <h2 th:text="${blog.title}">java入门</h2>
+                            </a>
+
+                            <span th:text="${#dates.format(blog.createTime,'yyyy-MM-dd HH:mm')}"></span>
+                            <span th:text="${blog.readSize}" class="glyphicon glyphicon-eye-open" aria-hidden="true"><span></span></span>
+                            <span th:text="${blog.commentSize}" class="glyphicon glyphicon-comment" aria-hidden="true"><span></span></span>
+                            <span th:text="${blog.praise_count}" class="glyphicon glyphicon-heart-empty" aria-hidden="true"><span></span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+
+
+
+        <!-- 底部 -->
+        <div th:insert="~{fragments/fragments :: footerBar}"></div>
+
+
+
+        <!-- ===============================================================================================-->
+        <script th:src="@{/js/jquery.min.js}" charset="utf-8"></script>
+        <script th:src="@{/js/bootstrap.min.js}"></script>
+        <script th:src="@{/js/modernizr.js}"></script>
+        <script th:src="@{/js/bootstrap-select.js}"></script>
+
+        <!--upload-->
+        <script  th:src="@{/js/uoload/amazeui.min.js}" charset="utf-8"></script>
+        <script  th:src="@{/js/uoload/cropper.min.js}" charset="utf-8"></script>
+        <script  th:src="@{/js/uoload/custom_up_img.js}" charset="utf-8"></script>
+
+
+        <div th:replace="~{PersonalCenter/pindex.html :: leftBar_JS}"></div>
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,267 @@
+.ccslider {
+	position: relative;	
+}
+
+.slider-innerWrapper {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	display: none;
+}
+
+.slider-innerWrapper img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	visibility: visible !important;
+}
+
+
+/* Styles for next/prev and play/pause buttons */
+
+.slider-controls {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 99;
+	display: none;
+}
+
+.ccslider:hover .slider-controls {
+	display: block;
+}
+
+a.slider-nav {
+	position: absolute;	
+	top: 50%;	
+	cursor: pointer;	
+}
+
+.slider-nav.prev {	
+	left: 0;
+}
+
+.slider-nav.next {	
+	right: 0;
+}
+
+.slider-timer {	
+	position: absolute;	
+	left: 50%;	
+	top: 50%;
+	z-index: 200;	
+	cursor: pointer;
+	display: none;
+}
+
+.ccslider:hover .slider-timer {
+	display: block;
+}
+
+
+
+/* Styles for the control links */
+.control-links {
+    position: absolute;
+    z-index: 200;
+    list-style: none;
+    bottom: -40px;    
+    padding: 0;
+	min-width: 100%;
+	text-align: center;
+	white-space: nowrap;
+}
+
+.control-links li {
+    display: inline-block;
+    margin-left: 5px;
+    cursor: pointer;    
+    background: #969696;
+    width: 10px;
+    height: 11px;
+    line-height: 0;
+	zoom: 1;
+	*float: left;	/* for IE6, IE7 */
+}
+
+.control-links li:first-child {
+	margin-left: 0;
+}
+
+.control-links li.active {
+    background: #00b8e9;
+}
+
+.control-links li.linkThumb {
+	width: auto;
+	height: auto;
+	position: relative;
+	top: 50px;
+	text-indent: 0;
+	background: transparent none;
+	-moz-transition: all 400ms ease;
+	-webkit-transition: all 400ms ease;
+	-o-transition: all 400ms ease;
+	-ms-transition: all 400ms ease;
+	transition: all 400ms ease;
+}
+
+.control-links li.linkThumb.active {
+	background: transparent none;
+	z-index: 1;
+	-moz-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+	-webkit-box-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+	box-shadow: 0 1px 5px rgba(0, 0, 0, 0.7);
+	-moz-transform: scale(1.1);
+	-webkit-transform: scale(1.1);
+	-o-transform: scale(1.1);
+	-ms-transform: scale(1.1);
+	transform: scale(1.1);
+}
+
+.control-links li.linkThumb img {
+	display: inline !important;
+	visibility: visible !important;
+}
+
+.ccslider.controlThumbs {
+	margin-bottom: 100px;
+}
+
+
+/* Caption styles */
+.cc-caption {
+	display: none;
+}
+
+.slider-caption {
+	background: #000;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 101;
+    color: #fff;
+    padding: 10px;
+    font-size: 14px;
+    position: absolute;
+    left: 0;
+	right: 0;
+    bottom: 0;	
+	display: none;
+}
+
+
+/* Containers for custom HTML content */
+.cc-htmlwrapper {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 101;
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	display: none;
+} 
+
+.cc-html {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+
+/* Styles for links placed on slide images */
+.slider-link {
+	display: block;
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 100;
+	width: 100%;
+	height: 100%;
+	background: url(about:blank);  /* hack to fix a bug in IE, to make the anchor tag clickable. Can use any fake image url */
+}
+
+
+/* Styles for elements used in 2d animations */
+.wipe-div {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 3;
+	width: 0;
+	height: 0;
+}
+
+.split1-div, .split2-div {
+	position: absolute;
+	z-index: 4;
+}
+
+.circle-div {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	z-index: 3;
+	width: 0;
+	height: 0;
+	-moz-border-radius: 50%;
+	-webkit-border-radius: 50%;
+	border-radius: 50%;
+}
+
+.clock-mask {
+	position: absolute;
+	top: 0;
+	z-index: 3;
+	width: 50%;
+	height: 100%;
+	overflow: hidden;
+}
+
+.clock-mask.left {
+	left: 0;
+}
+
+.clock-mask.right {
+	right: 0;
+}
+
+.clock-outer {
+	position: absolute;
+	top: 50%;
+	overflow: hidden;
+}
+
+.left .clock-outer {
+	-moz-transform-origin: left center;
+	-webkit-transform-origin: left center;
+	-o-transform-origin: left center;
+	-ms-transform-origin: left center;
+	transform-origin: left center;
+}
+
+.right .clock-outer {
+	-moz-transform-origin: right center;
+	-webkit-transform-origin: right center;
+	-o-transform-origin: right center;
+	-ms-transform-origin: right center;
+	transform-origin: right center;
+}
+
+.clock-inner {
+	position: absolute;
+	top: 50%;
+}
+
+.left .clock-inner {
+	left: -50%;
+}
+
+.right .clock-inner {
+	left: 50%;
+}

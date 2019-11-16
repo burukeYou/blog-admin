@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+
+<link rel="stylesheet" href="/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css" th:href="@{/css/font-awesome/css/font-awesome.min.css}">
+<link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|PT+Serif:400,400italic' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="css/style.css" th:href="@{/css/style.css}" id="theme-styles">
+<link rel="stylesheet" href="css/editormd.min.css" th:href="@{/css/editormd.min.css}"/>
+<link rel="stylesheet" type="text/css" href="css/tags.css" th:href="@{/css/tags.css}"/>
+<link rel="stylesheet" type="text/css" href="css/tip.css" th:href="@{/css/tip.css}"/>
+<!--必要样式-->
+<link rel="stylesheet" href="css/jquery-labelauty.css" th:href="@{/css/jquery-labelauty.css}"/>
+
+
+<link rel="stylesheet" href="css/jquery-labelauty.css" th:href="@{/MessagePopup/spop.css}"/>
+
+
+
+
+
+<head>
+</head>
+<body style="background-color: #f3f3f3">
+
+
+<!-- =====================================================================================================================-->
+
+
+<input type="hidden" id="user_id" th:value="${#authentication.principal.id}">
+<input type="hidden" id="username" th:value="${#authentication.principal.username}">
+
+<input type="hidden" id="blog_id" th:if="${blog != null}" th:value="${blog.id}">
+
+
+
+<!-- =====================================================================================================================-->
+
+<div class="container-fluid" style="padding-top: 10px;padding-left: 10px">
+    <div class="row" >
+        <div class="col-md-9 col-lg-9 col-sm-9 col-xs-9">
+            <input type="text" name="title" id="title" class="form-control" th:value="${blog.title}" placeholder="请输入标题"></div>
+        <div class="col-md-2 col-lg-2 col-sm-2 col-xs-2	">
+            <button type="button" class="btn btn-lg btn-primary" data-toggle="modal" data-target="#myModal">发布文章</button>
+
+        </div>
+        <div class="col-md-1 col-lg-1 col-sm-1 col-xs-1">
+            <img src="/img/user.jpeg" th:src="${session.user.avatar}" width="60px" class="img-circle">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-9 col-lg-9 col-sm-9 col-xs-9">
+            <textarea class="form-control" name="summary" id="summary" th:text="${blog.summary}" rows="3" placeholder="内容字数不能大于95个"></textarea>
+        </div>
+    </div>
+    <div class="row" style="margin-top: 20px">
+        <div id="editor" class="col-md-11 col-lg-11 col-sm-11 col-xs-11">
+            <textarea name="content" id="content" style="display:none;"  th:text="${blog.content}">### Hello Editor.md !</textarea>
+        </div>
+    </div>
+
+
+
+    <!-- 弹出层  -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content ">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">发布文章</h4>
+                </div>
+                <!-- 标签 -->
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="tagsinput-primary form-group" >
+                            文章标签：
+                            <input style="display: inline" name="tagsinput" id="tagsinputval" class="tagsinput"
+                                   data-role="tagsinput" th:value="${blog.tags}" placeholder="输入后回车"/>
+                        </div>
+                    </div>
+                    <hr/>
+                    <div class="row">
+                        <div class="col-md-2 col-md-offset-0"><h3>分类</h3></div>
+                        <div class="col-md-10 col-md-offset-0">
+                            <div>
+                                <ul class="dowebok">
+                                   <!-- <li><input type="radio" name="radio" data-labelauty="默认"></li>
+                                    <li><input type="radio" name="radio" data-labelauty="java"></li>
+                                    <li><input type="radio" name="radio" data-labelauty="java"></li>
+                                    <li><input type="radio" name="radio" data-labelauty="java"></li>
+                                    <li><input type="radio" name="radio" data-labelauty="java"></li>
+                                    <li><input type="radio" name="radio" data-labelauty="c++"></li>
+                                    <li><input type="radio" name="radio" data-labelauty="并发编程"></li>-->
+                                </ul>
+                                <span style="float: right" class="glyphicon glyphicon-plus" id="addCategoryBtn" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary"  th:onclick="publicBlog()">发布</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<script src="/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+<script type="text/javascript" th:src="@{/MessagePopup/spop.js}"></script>
+
+<script src="js/blog/writeBlog.js" th:src="@{/js/blog/writeBlog.js}"></script>
+<script src="../static/js/editormd.min.js" th:src="@{/js/editormd.min.js}"></script>
+<script src="js/tagsinput.js"  th:src="@{/js/tagsinput.js}" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="js/tip.js" th:src="@{/js/tip.js}"></script>
+<script src="js/vendor/google/html5-3.6-respond-1.1.0.min.js" th:src="@{/js/vendor/google/html5-3.6-respond-1.1.0.min.js}"></script>
+<script type="text/javascript" src="js/jquery-labelauty.js" th:src="@{/js/jquery-labelauty.js}"></script>
+
+
+
+
+</body>
+</html>

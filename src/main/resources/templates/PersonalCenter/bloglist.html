@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8">
+    <title>Single Post</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+
+    <!-- Font-Awesome -->
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css" th:href="@{/css/font-awesome/css/font-awesome.min.css}">
+
+    <!-- Google Webfonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|PT+Serif:400,400italic' rel='stylesheet' type='text/css'>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css" th:href="@{/css/style.css}"  id="theme-styles">
+
+    <!-- <[if lt IE 9]>    -->
+    <script src="js/vendor/google/html5-3.6-respond-1.1.0.min.js" th:src="@{/js/vendor/google/html5-3.6-respond-1.1.0.min.js}"></script>
+
+    <link rel="stylesheet" href="css/style.css" th:href="@{/js/uoload/amazeui.min.css}" >
+    <link rel="stylesheet" href="css/style.css" th:href="@{/js/uoload/amazeui.cropper.css}" >
+    <link rel="stylesheet" href="css/style.css" th:href="@{/js/uoload/custom_up_img.css}" >
+
+    <link rel="stylesheet" href="css/style.css" th:href="@{/css/bootstrap-select.css}" >
+
+    <link rel="stylesheet" href="css/jquery-labelauty.css" th:href="@{/MessagePopup/spop.css}"/>
+
+
+    <style>
+        #bloglist span {
+            margin-right: 1.5rem;
+            color: #999;
+            font-size: 15px
+        }
+
+        #bloglist span span{
+          margin-left: 6px;
+        }
+    </style>
+
+
+</head>
+<body>
+
+
+
+        <input type="hidden" id="userId" name="user_id" th:value="${#authentication.principal.id}">
+        <input type="hidden" id="username"  th:value="${#authentication.principal.username}">
+
+
+        <input type="hidden" id="currentCateId"  th:value="${param.categoryId}">
+
+        <!--top-->
+        <div th:insert="~{fragments/fragments :: topbar}"></div>
+        <hr style="height:1px;border: none;border-top:1px solid #ddd;margin:0px 0;"/>
+
+        <!-- message-list -->
+        <div class="row mes_outter" style="  padding-top: 17px; padding-left: 100px;padding-right: 116px;background-color: #f5f6f7;">
+            <div class="col-md-2 col-sm-2" style="padding-right: 0;">
+                <div th:insert="~{PersonalCenter/pindex.html :: leftBar}"></div>
+
+            </div>
+
+            
+            <!--中心显示区域 -->
+            <div class="col-md-10 col-sm-10 panel panel-default" style="padding: 20px;">
+
+                <!--搜索栏-->
+                <div class="panel panel-default" style="background-color: #f2f5f7">
+                    <div class="panel-body">
+                        <form class="form-inline" id="myForm" th:action="@{/personal/bloglist}" method="get">
+
+                            <input type="hidden" id="currentPage" name="currentPage" value="1">
+
+                            <h2 style="display: inline">筛选：</h2>
+                            <div class="form-group">
+                                <select class="selectpicker" name="order" onchange="changeOrder()" title="排序">
+                                    <option value="">不限</option>
+
+                                    <option value="new" th:selected="${order == 'new'}">最新</option>
+                                    <option value="hot" th:selected="${order == 'hot'}">最热</option>
+
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <select class="selectpicker" onchange="changeCategory()" name="categoryId" id="categoryBtn" title="选择分类">
+                                    <option value="">不限</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="keyword" class="form-control" th:value="${keyword}">
+                            </div>
+                            <button type="submit" class="btn btn-default" style="background-color: #428bca;color: white"
+                                    >搜索</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!--博客列表 -->
+                <div style="padding-left: 10px;padding-right: 10px;">
+                    <div class="row" style="border-bottom: 1px solid #bebdb6" th:each="blog : ${pageBean.dataList}">
+                        <div class="panel-body" id="bloglist">
+                            <a target="_Blank" th:href="'/'+${#authentication.principal.username}+'/blogs/'+${blog.id}" style="color: black">
+                                <h2 th:text="${blog.title}">java入门</h2>
+                            </a>
+
+                            <span th:text="${#dates.format(blog.createTime,'yyyy-MM-dd HH:mm')}">2019-05-04</span>
+                            <span th:text="${blog.readSize}" class="glyphicon glyphicon-eye-open" aria-hidden="true"><span>300</span></span>
+                            <span th:text="${blog.commentSize}" class="glyphicon glyphicon-comment" aria-hidden="true"><span>300</span></span>
+                            <span th:text="${blog.praise_count}" class="glyphicon glyphicon-heart-empty" aria-hidden="true"><span>300</span></span>
+
+                            <!--删除-->
+                            <a style="float: right;color: #CA0C16;" aria-hidden="true" th:onclick="deleteBlogById([[${blog.id}]])">删除</a>
+                            <a style="float: right" th:href="'/'+${#authentication.principal.username}+'/blogs/edit/'+${blog.id}">编辑&nbsp;&nbsp; | &nbsp;&nbsp;</a>
+
+                        </div>
+                    </div>
+
+
+                    <!--分页-->
+                   <nav aria-label="...">
+                        <ul class="pager" >
+                            共<span th:text="${pageBean.totalDataCount}">20</span>条 &nbsp;&nbsp;
+                            <li th:if="${pageBean.currentPage > 1}">
+                                <a href="javascript:;" th:onclick="changePage([[${pageBean.currentPage-1}]])"><span aria-hidden="true">
+                                &larr;</span>
+                                </a>
+                            </li>
+                            <li th:if="${pageBean.currentPage <= 1}" class="disabled">
+                                <span aria-hidden="true">&larr;</span>
+                            </li>
+
+                            &nbsp;&nbsp;
+                            <span class="label label-danger" style="font-size: 98%;" th:text="${pageBean.currentPage}">1</span>&nbsp;&nbsp;
+                            <li th:if="${pageBean.currentPage < pageBean.totalPageCount}">
+                                <a href="javascript:;" th:onclick="changePage([[${pageBean.currentPage+1}]])"><span aria-hidden="true">&rarr;</span></a>
+                            </li>
+                            <li th:if="${pageBean.currentPage >= pageBean.totalPageCount}" class="disabled">
+                                <span aria-hidden="true">&rarr;</span>
+                            </li>
+                        </ul>
+                    </nav>
+
+
+                </div>
+
+
+
+
+
+            </div>
+
+        </div>
+
+
+
+
+
+        <!-- 底部 -->
+        <div th:insert="~{fragments/fragments :: footerBar}"></div>
+
+
+
+        <!-- ===============================================================================================-->
+        <script th:src="@{/js/jquery.min.js}" charset="utf-8"></script>
+        <script th:src="@{/js/bootstrap.min.js}"></script>
+        <script th:src="@{/js/modernizr.js}"></script>
+        <script th:src="@{/js/bootstrap-select.js}"></script>
+
+        <!--upload-->
+        <script  th:src="@{/js/uoload/amazeui.min.js}" charset="utf-8"></script>
+        <script  th:src="@{/js/uoload/cropper.min.js}" charset="utf-8"></script>
+        <script  th:src="@{/js/uoload/custom_up_img.js}" charset="utf-8"></script>
+        <script type="text/javascript" th:src="@{/MessagePopup/spop.js}"></script>
+
+
+        <!--  <script src="js/modernizr.js"></script>
+  -->
+        <div th:replace="~{PersonalCenter/pindex.html :: leftBar_JS}"></div>
+
+        <script>
+            $(function () {
+                getUserCategory();
+            });
+
+            //异步加载个人分类
+            function getUserCategory(){
+                var userId = $("#userId").val();
+
+                $.ajax({
+                    url:  "/categorys/"+userId,
+                    type: 'GET',
+                    success: function(data){
+                        for (var i = 0; i < data.length; i++) {
+                            var sec ='';
+                            if (data[i].id == $("#currentCateId").val())
+                                sec = "selected";
+
+                            $("#categoryBtn").append("<option "+sec+" value='"+data[i].id+"'>"+data[i].categoryName+"</option>")
+                        }
+
+                    },
+                    error : function() {
+                        spop({
+                            template: '加载异常，稍后再试',
+                            autoclose: 2000
+                        });
+                    }
+                });
+            }
+
+            //页面改变时
+            function changePage(newPage) {
+                $("#currentPage").val(newPage);
+
+                $("#myForm").submit();
+
+            }
+
+            //最新最热改变时
+            function changeOrder(){
+                $("#myForm").submit();
+            }
+
+            //分类改变时
+            function changeCategory(){
+                $("#myForm").submit();
+            }
+
+            //删除博客
+            function deleteBlogById(blogId){
+                if (confirm("你也定要删除吗？")) {
+                    $.ajax({
+                        url:"/"+$("#username").val()+"/blogs/"+blogId,
+                        async:true,      //是否异步还是同步
+                        type:"DELETE",       //请求方式
+                        success:function(data){       //
+                            if (data.code == 201){
+                                spop({
+                                    style     : 'success',
+                                    template: data.message,
+                                    autoclose: 2000,
+                                    onClose: function() {
+                                        parent.location.reload();
+                                    }
+                                });
+                            }else if(data.code == 400){
+                                spop({
+                                    style     : 'error',
+                                    template: data.message,
+                                    autoclose: 3000
+                                });
+                            }
+
+
+                        },
+                        error:function(){
+                        },
+                        dataType:"json"      //第4行返回字符串的类型(解析格式方式)
+                    });
+                }
+
+
+            }
+
+
+        </script>
+
+
+
+</body>
+</html>

@@ -1,0 +1,21 @@
+* {margin: 0; padding: 0;}
+
+#slider {
+	//margin: 0 auto;
+	width: 100%;
+	height: 462px;
+	//background: ;
+}
+
+#slider .control-links {
+	bottom: 0;
+    display: none;
+}
+
+#slider .control-links li.active {
+    display: none;
+}
+
+#slider img {
+    visibility: hidden;
+}

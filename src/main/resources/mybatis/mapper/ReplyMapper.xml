@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myblog.dao.ReplyMapper">
+
+
+   <!-- <resultMap id="aaaaa" type="com.myblog.entity.Reply">
+        <id property="id" column="id"/>
+        <result property="comment_id" column="comment_id"/>
+        <result property="content" column="content"/>
+        <result property="parse_count" column="parse_count"/>
+        <result property="createtime" column="createtime"/>
+        <result property="repliedByOtherName" column="repliedByOtherName"/>
+        <result property="replyToOtherName" column="replyToOtherName"/>
+    </resultMap>
+
+    <select id="findAllReplyByCommentId"  resultMap="aaaaa">
+       select * from reply where comment_id = #{id} order by createtime limit #{startRow},#{size}
+    </select>-->
+
+
+
+
+
+</mapper>

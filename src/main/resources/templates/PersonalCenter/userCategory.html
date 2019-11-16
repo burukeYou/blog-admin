@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
+<head>
+    <meta charset="utf-8">
+    <title>Single Post</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <!-- Bootstrap styles -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+
+    <!-- Font-Awesome -->
+    <link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css" th:href="@{/css/font-awesome/css/font-awesome.min.css}">
+
+    <!-- Google Webfonts -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600|PT+Serif:400,400italic' rel='stylesheet' type='text/css'>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/style.css" th:href="@{/css/style.css}"  id="theme-styles">
+
+    <!-- <[if lt IE 9]>    -->
+    <script src="js/vendor/google/html5-3.6-respond-1.1.0.min.js" th:src="@{/js/vendor/google/html5-3.6-respond-1.1.0.min.js}"></script>
+
+    <link rel="stylesheet" href="css/style.css" th:href="@{/js/uoload/amazeui.min.css}" >
+    <link rel="stylesheet" href="css/style.css" th:href="@{/js/uoload/amazeui.cropper.css}" >
+    <link rel="stylesheet" href="css/style.css" th:href="@{/js/uoload/custom_up_img.css}" >
+
+    <link rel="stylesheet" href="css/jquery-labelauty.css" th:href="@{/MessagePopup/spop.css}"/>
+
+
+
+</head>
+<body>
+        <input type="hidden" id="username" th:value="${session.user.username}">
+        <input type="hidden" id="userId" th:value="${session.user.id}">
+
+
+        <!--top-->
+        <div th:insert="~{fragments/fragments :: topbar}"></div>
+        <hr style="height:1px;border: none;border-top:1px solid #ddd;margin:0px 0;"/>
+
+        <!-- message-list -->
+        <div class="row mes_outter" style="  padding-top: 17px; padding-left: 100px;padding-right: 116px;background-color: #f5f6f7;">
+            <div class="col-md-2 col-sm-2" style="padding-right: 0;">
+                <div th:insert="~{PersonalCenter/pindex.html :: leftBar}"></div>
+
+            </div>
+
+            <!--中心显示区域 -->
+            <div class="col-md-10 col-sm-10 panel panel-default" style="padding: 50px">
+
+                <div class="row">
+                    <form class="form-inline">
+                        <div class="form-group">
+                            <input type="text" id="cateName" class="form-control">
+                        </div>
+                        <button type="button" onclick="addCategory()" class="btn btn-default" style="background-color: #428bca;color: whitesmoke">添加分类</button>
+                    </form>
+                </div>
+
+                <div class="row table-responsive" style="margin-top: 30px ">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>类别</th>
+                            <th>文章数</th>
+                            <th>编辑</th>
+                            <th>删除</th>
+
+                        </tr>
+                        <tr th:each="cate :${categoryList}">
+                            <td th:text="${cate.categoryName}"></td>
+                            <td>20</td>
+                            <td>
+                                <span th:onclick="updateCategory([[${cate.id}]])" class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                            </td>
+                            <td>
+                                <span th:onclick="deleteCategoryById([[${cate.id}]])" class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+
+
+
+            </div>
+
+        </div>
+
+
+
+
+
+        <!-- 底部 -->
+        <div th:insert="~{fragments/fragments :: footerBar}"></div>
+
+
+
+        <!-- ===============================================================================================-->
+        <script th:src="@{/js/jquery.min.js}" charset="utf-8"></script>
+        <script th:src="@{/js/bootstrap.min.js}"></script>
+        <script th:src="@{/js/modernizr.js}"></script>
+
+        <!--upload-->
+        <script  th:src="@{/js/uoload/amazeui.min.js}" charset="utf-8"></script>
+        <script  th:src="@{/js/uoload/cropper.min.js}" charset="utf-8"></script>
+        <script  th:src="@{/js/uoload/custom_up_img.js}" charset="utf-8"></script>
+        <script type="text/javascript" th:src="@{/MessagePopup/spop.js}"></script>
+
+
+
+
+        <!--  <script src="js/modernizr.js"></script>
+  -->
+        <div th:replace="~{PersonalCenter/pindex.html :: leftBar_JS}"></div>
+
+        <script>
+            //添加分类
+            function addCategory(){
+
+                var categoryName = $("#cateName").val();
+                if (categoryName == null || categoryName == ""){
+                    spop({
+                        style:'error',
+                        template: '输入不能为空',
+                        autoclose: 1500
+                    });
+
+                    return;
+                }
+
+                $.ajax({
+                    url:"/categorys",
+                    async:true,      //是否异步还是同步
+                    type:"POST",       //请求方式
+                    data:{"username":$('#username').val(),"categoryName":categoryName},
+                    success:function(data){       //
+
+                        if (data.code == 403){
+                            spop({
+                                style:'error',
+                                template: data.message,
+                                autoclose: 1500
+                            });
+                            return;
+                        }
+                        else if (data.code == 401){
+                            spop({
+                                style:'error',
+                                template: data.message,
+                                autoclose: 1500
+                            });
+                            return;
+                        }
+                        else if (data.code == 203){
+                            spop({
+                                style:'success',
+                                template: data.message,
+                                autoclose: 1500,
+
+                                onClose: function() {
+                                    //重新加载分类列表
+                                    parent.location.reload();
+                                }
+
+                            });
+                        }
+
+                    },
+                    error:function(){
+                    },
+                    dataType:"json"
+                });
+            }
+
+            //删除分类
+            function deleteCategoryById(id) {
+                if (!confirm("你确认要删除吗"))
+                    return;
+
+                $.ajax({
+                    url:"/categorys/"+id+"?username="+$('#username').val(),
+                    async:true,      //是否异步还是同步
+                    type:"DELETE",       //请求方式
+                    success:function(data){       //
+                        if (data.code == 200){
+                            spop({
+                                style:'success',
+                                template: data.message,
+                                autoclose: 1500,
+
+                                onClose: function() {
+                                    //重新加载分类列表
+                                    parent.location.reload();
+                                }
+                            });
+                        }
+                        else if (data.code == 400){
+                            spop({
+                                style: 'error',
+                                template: data.message,
+                                autoclose: 1500,
+                            });
+                        }
+                    },
+                    error:function(){
+                    },
+                    dataType:"json"
+                });
+            }
+
+
+            //修改分类
+            function updateCategory(id) {
+
+                var res = prompt("新的分类名");
+                if (res == null || res == "")
+                    return;
+
+                $.ajax({
+                    url:"/categorys",
+                    async:true,      //是否异步还是同步
+                    type:"POST",       //请求方式
+                    data:{"username":$('#username').val(),"categoryName":res,"id":id,"user_id":$("#userId").val()},
+                    success:function(data){       //
+
+
+                        if (data.code == 403){
+                            spop({
+                                style:'error',
+                                template: data.message,
+                                autoclose: 1500
+                            });
+                        }
+                        else if (data.code == 401){
+                            spop({
+                                style:'error',
+                                template: data.message,
+                                autoclose: 1500
+                            });
+                        }
+                        else if (data.code == 203){
+                            spop({
+                                style:'success',
+                                template: data.message,
+                                autoclose: 1500,
+
+                                onClose: function() {
+                                    //重新加载分类列表
+                                    parent.location.reload();
+                                }
+                            });
+                        }
+
+                    },
+                    error:function(){
+                    },
+                    dataType:"json"
+                });
+            }
+        </script>
+
+
+
+</body>
+</html>
