@@ -27,6 +27,7 @@ import java.util.List;
  *          个人中心
  */
 
+
 @Controller
 @RequestMapping("/personal")
 @PreAuthorize("isAuthenticated()")
