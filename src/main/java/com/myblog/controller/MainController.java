@@ -55,8 +55,6 @@ import java.util.List;
  -------------
     直接写名字会交给视图解析器解析
     加上redirect或者forward才是存储转发到其他请求
-
-
  *
  */
 @Controller
