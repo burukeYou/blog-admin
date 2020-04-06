@@ -2,6 +2,8 @@ package com.myblog.entity.Es;
 
 
 import com.myblog.entity.Blog;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
 import org.springframework.data.annotation.Id;
@@ -40,7 +42,8 @@ import java.util.Date;
 
  */
 
-
+@AllArgsConstructor
+@Builder
 @Document(indexName = "myblog", type = "blog")
 @Data
 @ToString

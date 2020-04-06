@@ -199,51 +199,52 @@ public class MainController {
         if ("".equals(queryVo.getKeyword()))
             queryVo.setKeyword(null);
 
-        long count = esBlogRepository.count();
+        try {
+            if (queryVo.getOrder().equals("hot")){
+                //最热查询
+                Sort sort = new Sort(Sort.Direction.DESC,"readSize","commentSize","praise_count","createTime");
+                Pageable pageable = new PageRequest(queryVo.getCurrentPage()-1,queryVo.getPageSize(),sort);
+                page = esBlogService.findHotEsBligByCondition(queryVo.getKeyword(),pageable);
+
+            }
+            else if (queryVo.getOrder().equals("new")){
+                //最新查询
+                Sort sort = new Sort(Sort.Direction.DESC,"createTime");
+                Pageable pager = new PageRequest(queryVo.getCurrentPage()-1,queryVo.getPageSize(),sort);
+                page = esBlogService.findNewEsBlogsByCondition(queryVo.getKeyword(), pager);
+            }
+            List<EsBlog> esblogs = page.getContent();
+
+            /**
+             *
+             */
+            //1-从es查找最热门的6篇文章
+            List<EsBlog> hotest = esBlogService.findTop6HotEsBlog();
 
 
-        if (queryVo.getOrder().equals("hot")){
-            //最热查询
-            Sort sort = new Sort(Sort.Direction.DESC,"readSize","commentSize","praise_count","createTime");
-            Pageable pageable = new PageRequest(queryVo.getCurrentPage()-1,queryVo.getPageSize(),sort);
-            page = esBlogService.findHotEsBligByCondition(queryVo.getKeyword(),pageable);
+            //2-从es中查找最新发布的6篇文章
+            List<EsBlog> newest = esBlogService.findTop6NewEsBlog();
 
+
+            //3-查找最热门的用户
+            List<User> users = esBlogService.findTopUsers();
+
+
+            //4-查找最热门的标签
+            List<TagVo> tags = esBlogService.findTopTags();
+
+
+            //存储
+            model.addAttribute("pageBean",page);
+            model.addAttribute("esbloglist",esblogs);
+            model.addAttribute("newest",newest);
+            model.addAttribute("hotest",hotest);
+            model.addAttribute("users",users);
+            model.addAttribute("tags",tags);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "index";
         }
-        else if (queryVo.getOrder().equals("new")){
-            //最新查询
-            Sort sort = new Sort(Sort.Direction.DESC,"createTime");
-            Pageable pager = new PageRequest(queryVo.getCurrentPage()-1,queryVo.getPageSize(),sort);
-            page = esBlogService.findNewEsBlogsByCondition(queryVo.getKeyword(), pager);
-        }
-        List<EsBlog> esblogs = page.getContent();
-
-        /**
-         *
-         */
-        //1-从es查找最热门的6篇文章
-        List<EsBlog> hotest = esBlogService.findTop6HotEsBlog();
-
-
-        //2-从es中查找最新发布的6篇文章
-        List<EsBlog> newest = esBlogService.findTop6NewEsBlog();
-
-
-        //3-查找最热门的用户
-        List<User> users = esBlogService.findTopUsers();
-
-
-        //4-查找最热门的标签
-        List<TagVo> tags = esBlogService.findTopTags();
-
-
-        //存储
-        model.addAttribute("pageBean",page);
-        model.addAttribute("esbloglist",esblogs);
-        model.addAttribute("newest",newest);
-        model.addAttribute("hotest",hotest);
-        model.addAttribute("users",users);
-        model.addAttribute("tags",tags);
-
 
         return "index";
     }

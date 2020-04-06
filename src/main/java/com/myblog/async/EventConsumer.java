@@ -44,6 +44,8 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
     @Autowired
     private RedisTemplate redisTemplate;
 
+    //2-开启线程去处理事件队列
+    private static ExecutorService executorService = Executors.newCachedThreadPool();
 
 
     /**
@@ -70,18 +72,14 @@ public class EventConsumer implements InitializingBean, ApplicationContextAware 
                     }
 
                     config.get(evenType).add(e.getValue());
-
                 }
-
             }
         }
 
 
-        //2-开启线程去处理事件队列
-        ExecutorService executorService = Executors.newCachedThreadPool();
+
         executorService.execute(()->{
             while(true){
-
 /*
                 System.out.println("处理事件");
 */

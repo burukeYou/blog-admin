@@ -1,6 +1,6 @@
 
 server:
-  port: 8080
+  port: 80
   #servlet:
     #context-path: /myblog
 
@@ -17,13 +17,13 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password: a8899543
-    url: jdbc:mysql://www.czh2you.com:3306/MyBlog?useUnicode=true&characterEncoding=utf-8&useSSL=false
+    url: jdbc:mysql:/cdb-dceafysi.cd.tencentcdb.com:10058/MyBlog?useUnicode=true&characterEncoding=utf-8&useSSL=false
 
   # elasticsearch
   data:
     elasticsearch:
-      cluster-name: MyBlogEs
-      cluster-nodes: www.czh2you.com:9300
+      cluster-name: master
+      cluster-nodes: 121.36.47.240:9300
 
     properties:
       transport:
@@ -32,7 +32,7 @@ spring:
 
   #redis
   redis:
-    host: www.czh2you.com
+    host: 121.36.47.240
     lettuce:
       pool:
         max-active: 8
