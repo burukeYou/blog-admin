@@ -20,25 +20,18 @@ spring:
     driver-class-name: com.mysql.jdbc.Driver
     username: root
     password:  a8899543
-    url: jdbc:mysql://cdb-dceafysi.cd.tencentcdb.com:10058/MyBlog?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/MyBlog?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
 
 
   # elasticsearch
   data:
     elasticsearch:
       cluster-name: master
-      cluster-nodes: 121.36.47.240:9300
-      #cluster-nodes: 47.100.201.61:9300
-
-
-
-    #properties:
-      #transport:
-
+      cluster-nodes:localhost:9300
 
   #redis
   redis:
-    host: 121.36.47.240
+    host: localhost
     lettuce:
       pool:
         max-active: 8
@@ -46,12 +39,6 @@ spring:
         max-idle: 8  # 连接池中的最大空闲连接 默认 8
         min-idle: 1   # 连接池中的最小空闲连接 默认 1
     timeout: 60s
-    password: 123456
-
-
-
-
-
 
   #设置开启热部署
   devtools:
@@ -71,16 +58,6 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl    #打印sql语句
 
-
-
-# ==================================logging=======================================
-
-#logging:
-   # file: myBlog.log
-
-    #level:
-    #root: info       #根目录是信息级别
-    #com.myblog.dao: debug    #dao层是debug级别
 
 
 
