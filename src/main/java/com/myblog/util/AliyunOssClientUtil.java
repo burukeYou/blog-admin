@@ -21,22 +21,17 @@ import java.util.UUID;
 
 public class AliyunOssClientUtil {
 
-
-    //OSS客户端（保证并发-内存可见性）
+    //OSS客户端
     private volatile static OSSClient instance;
 
-
-    //定义日志
-    // private final static LogUtils logger = LogUtils.getLogger(AliyunOssClientUtil.class);
-
     //OSS 的地址
-    private final static String OSS_END_POINT = "http://oss-cn-shenzhen.aliyuncs.com";
+    private final static String OSS_END_POINT = "http://xxxx.com";
     //OSS 的key值
-    private final static String OSS_ACCESS_KEY_ID = "LTAIpb0tEf3Wyp0i";
+    private final static String OSS_ACCESS_KEY_ID = "xx";
     //OSS 的secret值
-    private final static String OSS_ACCESS_KEY_SECRET = "7G6n4PViD0F8tnjfnb0uJ04h1fHCY5";
+    private final static String OSS_ACCESS_KEY_SECRET = "xxx";
     //OSS 的bucket名字
-    private final static String OSS_BUCKET_NAME = "myblog-czh";
+    private final static String OSS_BUCKET_NAME = "xxx";
     //设置URL过期时间为10年
     private final static Date OSS_URL_EXPIRATION = DateUtils.addDays(new Date(), 365 * 10);
 
@@ -63,10 +58,7 @@ public class AliyunOssClientUtil {
     private AliyunOssClientUtil() {
     }
 
-    /**
-     * 单例
-     *      --OSS工具类实例
-     */
+ 
     private static OSSClient getOSSClient() {
         if (instance == null) {
             synchronized (AliyunOssClientUtil.class) {
@@ -94,14 +86,8 @@ public class AliyunOssClientUtil {
                 AliyunOssClientUtil.getOSSClient().createBucket(OSS_BUCKET_NAME);
             }
         } catch (Exception e) {
-            // logger.error("{}", "创建Bucket失败,请核对Bucket名称(规则：只能包含小写字母、数字和短横线，必须以小写字母和数字开头和结尾，长度在3-63之间)");
-            //throw new OSSCreateBucketRuntimeException("创建Bucket失败,请核对Bucket名称(规则：只能包含小写字母、数字和短横线，必须以小写字母和数字开头和结尾，长度在3-63之间)");
         }
     }
-
-
-
-
 
     /**
      * 2-  上传文件---去除URL中的？后的时间戳
@@ -155,8 +141,6 @@ public class AliyunOssClientUtil {
             return fileName;
 
         } catch (Exception e) {
-            //logger.error("{}", "上传文件失败");
-            //throw new OssPutObjectRuntimeException("上传文件失败");
             return null;
         }
     }
@@ -170,7 +154,6 @@ public class AliyunOssClientUtil {
      */
     private static String getImgUrl(String fileUrl, FileDirType fileDir) {
         if (StringUtils.isEmpty(fileUrl)) {
-            //logger.error("{}", "文件地址为空");
             throw new RuntimeException("文件地址为空");
         }
         String[] split = fileUrl.split("/");
@@ -178,18 +161,12 @@ public class AliyunOssClientUtil {
         //获取oss图片URL失败
         URL url = AliyunOssClientUtil.getOSSClient().generatePresignedUrl(OSS_BUCKET_NAME, fileDir.getDir() + split[split.length - 1], OSS_URL_EXPIRATION);
         if (url == null) {
-            //logger.error("{}", "获取oss文件URL失败");
-           // throw new OSSGeneratePresignedUrlRuntimeException("获取oss文件URL失败");
             throw new RuntimeException("获取oss图片URL失败");
         }
         return url.toString();
     }
 
-    /**
-     * 判断OSS服务文件上传时文件的contentType
-              @param FilenameExtension 文件后缀
-              @return 后缀
-     */
+  
     private static String getContentType(String FilenameExtension) {
         if (FilenameExtension.equalsIgnoreCase("bmp")) {
             return "image/bmp";
